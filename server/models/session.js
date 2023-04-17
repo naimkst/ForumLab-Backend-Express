@@ -30,7 +30,7 @@ const SessionSchema = new mongoose.Schema({
 
 SessionSchema.plugin(uniqueValidator);
 
-SessionSchema.statics.generateToken = function() {
+SessionSchema.statics.generateToken = function () {
   return new Promise((resolve, reject) => {
     crypto.randomBytes(16, (err, buf) => {
       if (err) {
@@ -42,11 +42,11 @@ SessionSchema.statics.generateToken = function() {
   });
 };
 
-SessionSchema.statics.expireAllTokensForUser = function(userId) {
+SessionSchema.statics.expireAllTokensForUser = function (userId) {
   return this.updateMany({ userId }, { $set: { status: 'expired' } });
 };
 
-SessionSchema.methods.expireToken = function() {
+SessionSchema.methods.expireToken = function () {
   const session = this;
   return session.update({ $set: { status: 'expired' } });
 };
