@@ -11,14 +11,17 @@ const router = express.Router();
 
 router.post('/register', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, userName } = req.body;
     if (!isEmail(email)) {
       throw new Error('Email must be a valid email address.');
+    }
+    if (userName == null) {
+      throw new Error('Username is required.');
     }
     if (typeof password !== 'string') {
       throw new Error('Password must be a string.');
     }
-    const user = new User({ email, password });
+    const user = new User({ email, password, userName });
     const persistedUser = await user.save();
     const userId = persistedUser._id;
     const session = await initSession(userId);
@@ -54,8 +57,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({
         errors: [
           {
-            title: 'Bad Request',
-            detail: 'Email must be a valid email address',
+            meessage: 'Email must be a valid email address',
           },
         ],
       });
@@ -64,8 +66,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({
         errors: [
           {
-            title: 'Bad Request',
-            detail: 'Password must be a string',
+            message: 'Password must be a string',
           },
         ],
       });
@@ -164,10 +165,8 @@ router.put('/logout', authenticate, csrfCheck, async (req, res) => {
     const { session } = req;
     await session.expireToken(session.token);
     res.clearCookie('token');
-
     res.json({
-      title: 'Logout Successful',
-      detail: 'Successfuly expired login session',
+      message: 'Logout Successful',
     });
   } catch (err) {
     res.status(400).json({
