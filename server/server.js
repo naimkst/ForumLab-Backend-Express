@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const path = require('path');
+const cors = require('cors');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const { getSecret } = require('./secrets');
@@ -17,6 +18,8 @@ mongoose.connect(getSecret('dbUri')).then(
 );
 
 const app = express();
+
+app.use(cors());
 
 console.log(process.env.PORT, 'port');
 
