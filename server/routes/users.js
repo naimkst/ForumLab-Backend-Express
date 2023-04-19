@@ -37,6 +37,7 @@ router.post('/register', async (req, res) => {
       .json({
         message: 'User Registration Successful',
         csrfToken: session.csrfToken,
+        token: session.token,
       });
   } catch (err) {
     res.status(400).json({
@@ -94,6 +95,7 @@ router.post('/login', async (req, res) => {
       .json({
         message: 'Login Successful',
         csrfToken: session.csrfToken,
+        token: session.token,
       });
   } catch (err) {
     res.status(401).json({
